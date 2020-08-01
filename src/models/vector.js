@@ -6,12 +6,12 @@ export default class Vector {
         this.z = z;
     }
 
-    add(vector) {
-        return new Vector(this.x + vector.x, this.y + vector.y, this.z + vector.z);
+    add(v) {
+        return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
-    sub(vector) {
-        return new Vector(this.x - vector.x, this.y - vector.y, this.z - vector.z);
+    sub(v) {
+        return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
     mul(scalar) {
@@ -22,8 +22,8 @@ export default class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
-    equals(vector) {
-        return this.x === vector.x && this.y === vector.y && this.z === this.z;
+    equals(v) {
+        return this.x === v.x && this.y === v.y && this.z === this.z;
     }
 
 }

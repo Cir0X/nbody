@@ -9,14 +9,15 @@ export default class SolarSystem {
     }
 
     computeAccelerations() {
-        var gc = 150; // TODO: find out what gc is. Maybe gravitational center?
+        var gc = 150;
         for (var i = 0; i < this.n; ++i) {
             this.planets[i].acceleration = this.origin;
             for (var j = 0; j < this.n; ++j) {
                 if (i !== j) {
                     var tmp = gc * this.planets[j].mass / Math.pow((this.planets[i].position.sub(this.planets[j].position)).mod(), 3);
-                    // this.planets[i].acceleration = this.planets[i].acceleration
-                    //     .add(this.planets[j].position.sub(this.planets[i].position).mul(tmp));
+                    if (tmp === Infinity || isNaN(tmp)) {
+                        tmp = 0;
+                    }
 
                     const a = this.planets[i].acceleration.add(this.planets[j].position.sub(this.planets[i].position));
                     this.planets[i].acceleration = a.mul(tmp);
@@ -37,7 +38,7 @@ export default class SolarSystem {
     computeVelocities() {
         for (var i = 0; i < this.n; ++i) {
             this.planets[i].velocity = this.planets[i].velocity
-                .add(this.planets[i].acceleration);
+            .add(this.planets[i].acceleration);
         }
     }
 
@@ -48,7 +49,7 @@ export default class SolarSystem {
                     var tmp = {};
                     Object.assign(tmp, this.planets[i].velocity);
                     this.planets[i].velocity = this.planets[j].velocity;
-                    this.planets[j].velocity = tmp;
+                    this.planets[j].velocity = new Vector(tmp.x, tmp.y, tmp.z);
                 }
             }
         }
@@ -58,6 +59,6 @@ export default class SolarSystem {
         this.computeAccelerations();
         this.computePositions();
         this.computeVelocities();
-        // TODO: resolve collisions
+        this.resolveCollisions();
     }
 }

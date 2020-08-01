@@ -1,25 +1,34 @@
 import simulate from './simulation.js';
+import createMyModule from './cpp/nbody.js';
 
 function startSimulation() {
-    const multiplier = 1;
-    var n = parseInt(document.getElementById('n-input').value) * multiplier;
-    console.log('simulating', n, 'planets');
 
+    createMyModule().then((module) => {
+        console.log('WASM Module loaded');
+        monitorSimulation(false);
+        monitorSimulation(true);
+    });
+}
+
+function monitorSimulation(module, wasm) {
     const result = [];
-
-    for (var i = 0; i < 10; ++i ) {
-        console.log(i);
-        n *= 10;
+    const ns = [5, 10, 100, 500, 1000, 10000, 100000];
+    ns.forEach((n) => {
         const start = performance.now();
-        simulate(n, n);
+        if (!wasm) {
+            simulate(n, 1000); // JS
+        } else {
+            module.ccall('simulate', 'v', ['number', 'number'], [n, 1000]); // WASM
+        }
         const end = performance.now();
         const timeTaken = end - start;
-        console.log(n, 'runs with', n, 'planets took', timeTaken, 'ms');
-        result.push({n: n, runs: n, timeTaken: timeTaken});
-    }
+        // console.log(n, 'planets took', timeTaken, 'ms');
+        result.push({ n: n, timeTaken: timeTaken });
+    });
 
     console.log(JSON.stringify(result));
     console.table(result);
+
 }
 
 window.startSimulation = startSimulation;

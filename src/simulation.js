@@ -14,8 +14,8 @@ export default function simulate(n, runs) {
 }
 
 function generatePlanets(n) {
-    const planets = [];
-    for (var i; i < n; ++i) {
+    var planets = [];
+    for (var i = 0; i < n; ++i) {
         const startMass = i;
         const startVelocity = new Vector(i, i, i);
         const startAcceleration = new Vector(i, i, i);
